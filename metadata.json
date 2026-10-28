@@ -1,0 +1,6 @@
+{
+  "name": "نظام التقرير اليومي للإدارة العامة للتشغيل والصيانة - AFMIS",
+  "description": "منظومة إلكترونية متكاملة للتقارير اليومية ومراقبة وتقييم أداء التشغيل والصيانة لأنظمة AFMIS بوزارة المالية مع احتساب المؤشرات الحية وتصدير Excel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
