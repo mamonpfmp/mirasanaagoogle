@@ -11,6 +11,9 @@ import { Login } from './Login';
 import { UserDashboard } from './UserDashboard';
 import { AdminDashboard } from './AdminDashboard';
 import { CriteriaSettings } from './CriteriaSettings';
+import AFMISDashboard from './AFMISDashboard';
+
+import AppLayout from './components/AppLayout';
 
 export default function App() {
   return (
@@ -20,43 +23,49 @@ export default function App() {
           {/* Public Route */}
           <Route path="/login" element={<Login />} />
 
-          {/* User Protected Route (Accessible to authenticated users with user or admin role) */}
+          {/* Authenticated Layout Route */}
           <Route
-            path="/dashboard"
             element={
               <AuthGuard>
-                <UserDashboard />
+                <AppLayout />
               </AuthGuard>
             }
-          />
+          >
+            {/* AFMIS Central Financial Dashboard */}
+            <Route path="/afmis-dashboard" element={<AFMISDashboard />} />
+            <Route path="/afmis" element={<AFMISDashboard />} />
 
-          {/* Admin Protected Route: Users Management */}
-          <Route
-            path="/admin"
-            element={
-              <AdminGuard>
-                <AdminDashboard />
-              </AdminGuard>
-            }
-          />
+            {/* User Protected Route: Dashboard */}
+            <Route path="/dashboard" element={<UserDashboard />} />
 
-          {/* Admin Protected Route: Criteria & Rubrics Settings */}
-          <Route
-            path="/admin/criteria"
-            element={
-              <AdminGuard>
-                <CriteriaSettings />
-              </AdminGuard>
-            }
-          />
-          <Route
-            path="/criteria"
-            element={
-              <AdminGuard>
-                <CriteriaSettings />
-              </AdminGuard>
-            }
-          />
+            {/* Admin Protected Route: Users Management */}
+            <Route
+              path="/admin"
+              element={
+                <AdminGuard>
+                  <AdminDashboard />
+                </AdminGuard>
+              }
+            />
+
+            {/* Admin Protected Route: Criteria & Rubrics Settings */}
+            <Route
+              path="/admin/criteria"
+              element={
+                <AdminGuard>
+                  <CriteriaSettings />
+                </AdminGuard>
+              }
+            />
+            <Route
+              path="/criteria"
+              element={
+                <AdminGuard>
+                  <CriteriaSettings />
+                </AdminGuard>
+              }
+            />
+          </Route>
 
           {/* Root Redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

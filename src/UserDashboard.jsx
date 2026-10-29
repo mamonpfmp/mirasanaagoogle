@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import {
   loadStoredReports,
@@ -59,8 +59,22 @@ const MONTHLY_KPI_TRENDS = [
 export const UserDashboard = () => {
   const { user, role, profile, logout } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'reports' | 'new-report' | 'rubric'
+  const tabFromQuery = searchParams.get('tab');
+  const [activeTab, setActiveTabState] = useState(tabFromQuery || 'overview');
+
+  useEffect(() => {
+    if (tabFromQuery && ['overview', 'reports', 'new-report', 'rubric'].includes(tabFromQuery)) {
+      setActiveTabState(tabFromQuery);
+    }
+  }, [tabFromQuery]);
+
+  const setActiveTab = (tabName) => {
+    setActiveTabState(tabName);
+    setSearchParams({ tab: tabName });
+  };
+
   const [reports, setReports] = useState(() => loadStoredReports());
   const [selectedReportForModal, setSelectedReportForModal] = useState(null);
 
@@ -108,183 +122,95 @@ export const UserDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-100/70 text-slate-900 font-sans" dir="rtl">
+    <div className="w-full text-slate-900 font-sans" dir="rtl">
       
-      {/* Top Header & User Welcome Strip */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 gap-4">
-            
-            {/* Brand Logo & Title */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 flex items-center justify-center shadow-xs">
-                <img
-                  src="/assets/aistudio/Screenshot_________________WhatsApp_4c36ef97.jpg"
-                  alt="شعار الإدارة العامة للتشغيل والصيانة AFMIS"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base font-bold text-slate-900">
-                    منظومة تقارير التشغيل وتقييم الأداء
-                  </span>
-                  <span className="text-xs px-2 py-0.5 rounded font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    AFMIS
-                  </span>
-                </div>
-                <span className="text-xs text-slate-500 font-medium">
-                  الإدارة العامة للتشغيل والصيانة · وزارة المالية
-                </span>
-              </div>
-            </div>
-
-            {/* Navigation Tabs */}
-            <nav className="hidden lg:flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === 'overview'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <TrendingUp className="w-4 h-4" />
-                <span>المؤشرات البيانية (Recharts)</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('reports')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === 'reports'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <BarChart3 className="w-4 h-4" />
-                <span>سجل التقارير اليومية</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('new-report')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === 'new-report'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>إضافة تقرير جديد</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('rubric')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
-                  activeTab === 'rubric'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <BookOpen className="w-4 h-4" />
-                <span>دليل المعايير والأوزان</span>
-              </button>
-            </nav>
-
-            {/* User Profile & Actions */}
-            <div className="flex items-center gap-3">
-              {/* Admin Portal link if user is Admin or Super Admin */}
-              {(role === 'admin' || role === 'super_admin' || user?.email === 'mamonpfmp@gmail.com') && (
-                <Link
-                  to="/admin"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg transition-colors"
-                >
-                  <Shield className="w-3.5 h-3.5 text-purple-700" />
-                  <span>لوحة المشرفين (Admin)</span>
-                </Link>
-              )}
-
-              {/* User Email & Role Badge */}
-              <div className="flex items-center gap-2.5 pl-2">
-                <div className="w-9 h-9 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-700 font-bold text-xs">
-                  {user?.user_metadata?.full_name ? user.user_metadata.full_name[0] : 'م'}
-                </div>
-                <div className="hidden sm:flex flex-col text-right">
-                  <span className="text-xs font-bold text-slate-800 truncate max-w-[140px]">
-                    {user?.user_metadata?.full_name || user?.email}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[10px] text-slate-500 font-mono truncate max-w-[120px]">
-                      {user?.email}
-                    </span>
-                    <span
-                      className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
-                        role === 'super_admin'
-                          ? 'bg-purple-100 text-purple-800'
-                          : role === 'admin'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-emerald-100 text-emerald-800'
-                      }`}
-                    >
-                      {role === 'super_admin' ? 'مشرف عام' : role === 'admin' ? 'مشرف نظام' : 'مستخدم'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Logout button */}
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors"
-                title="تسجيل الخروج"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden md:inline">خروج</span>
-              </button>
-            </div>
-
-          </div>
-
-          {/* Mobile Tab Strip */}
-          <div className="lg:hidden flex items-center justify-between py-2 border-t border-slate-100 text-xs gap-1">
+      {/* Sub-Navigation & Actions Toolbar */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-xs p-3.5 mb-6 no-print">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+          
+          {/* Navigation Tabs */}
+          <nav className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 w-full lg:w-auto">
             <button
+              type="button"
               onClick={() => setActiveTab('overview')}
-              className={`flex-1 py-1.5 text-center font-medium rounded-md ${
-                activeTab === 'overview' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+                activeTab === 'overview'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              المؤشرات البيانية
+              <TrendingUp className="w-4 h-4" />
+              <span>المؤشرات البيانية (Recharts)</span>
             </button>
+
             <button
+              type="button"
               onClick={() => setActiveTab('reports')}
-              className={`flex-1 py-1.5 text-center font-medium rounded-md ${
-                activeTab === 'reports' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+                activeTab === 'reports'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              التقارير
+              <BarChart3 className="w-4 h-4" />
+              <span>سجل التقارير اليومية ({reports.length})</span>
             </button>
+
             <button
+              type="button"
               onClick={() => setActiveTab('new-report')}
-              className={`flex-1 py-1.5 text-center font-medium rounded-md ${
-                activeTab === 'new-report' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+                activeTab === 'new-report'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              تقرير جديد
+              <PlusCircle className="w-4 h-4" />
+              <span>إضافة تقرير جديد</span>
             </button>
+
             <button
+              type="button"
               onClick={() => setActiveTab('rubric')}
-              className={`flex-1 py-1.5 text-center font-medium rounded-md ${
-                activeTab === 'rubric' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+                activeTab === 'rubric'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              المعايير
+              <BookOpen className="w-4 h-4" />
+              <span>دليل المعايير والأوزان</span>
+            </button>
+          </nav>
+
+          {/* Quick Actions Strip */}
+          <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+            <button
+              type="button"
+              onClick={handleExportAll}
+              disabled={reports.length === 0}
+              title="تصدير جميع التقارير إلى ملف Excel بصيغة xlsx"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs md:text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition-colors whitespace-nowrap shadow-xs disabled:opacity-50 cursor-pointer"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              <span>تصدير Excel</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('new-report')}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs md:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors whitespace-nowrap shadow-xs cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>تقرير جديد</span>
             </button>
           </div>
-        </div>
-      </header>
 
-      {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="w-full space-y-6">
         
         {/* ========================================================================= */}
         {/* TAB 1: OVERVIEW (Recharts Dashboard Charts: اتجاهات مؤشرات الأداء)       */}
@@ -617,7 +543,7 @@ export const UserDashboard = () => {
           <KpiRubricView />
         )}
 
-      </main>
+      </div>
 
       {/* Official Report Detail & Print Modal */}
       {selectedReportForModal && (

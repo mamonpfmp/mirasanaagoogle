@@ -327,60 +327,58 @@ export const CriteriaSettings = () => {
   );
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-blue-600 selection:text-white">
+    <div dir="rtl" className="w-full text-gray-900 font-sans selection:bg-blue-600 selection:text-white">
       
-      {/* الشريط العلوي المشترك (Header) */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 gap-4">
-            
-            {/* الشعار والعنوان */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base font-bold text-gray-900">إعدادات ومعايير الأداء (KPIs)</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    بوابة المشرفين
-                  </span>
-                </div>
-                <span className="text-xs text-gray-500">نظام معلومات الإدارة المالية الحكومية (AFMIS) · وزارة المالية</span>
-              </div>
+      {/* الشريط العلوي المشترك (Sub-header) */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-xs p-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          
+          {/* الشعار والعنوان */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
             </div>
-
-            {/* روابط التنقل السريع */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 rounded-lg transition-colors border border-gray-300"
-              >
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                <span>إدارة المستخدمين</span>
-              </Link>
-
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
-              >
-                <span>لوحة المؤشرات</span>
-                <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold text-gray-900">إعدادات ومعايير الأداء (KPIs)</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  بوابة المشرفين
+                </span>
+              </div>
+              <span className="text-xs text-gray-500">نظام معلومات الإدارة المالية الحكومية (AFMIS) · وزارة المالية</span>
             </div>
-
           </div>
+
+          {/* روابط التنقل السريع */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to="/admin"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 rounded-lg transition-colors border border-gray-300"
+            >
+              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <span>إدارة المستخدمين</span>
+            </Link>
+
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
+            >
+              <span>لوحة المؤشرات</span>
+              <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+          </div>
+
         </div>
-      </header>
+      </div>
 
       {/* المحتوى الرئيسي */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="w-full space-y-6">
         
         {/* إشعار النجاح */}
         {toastMessage && (
@@ -680,7 +678,7 @@ export const CriteriaSettings = () => {
           </div>
         )}
 
-      </main>
+      </div>
 
       {/* ========================================================================= */}
       {/* النافذة المنبثقة الديناميكية (Modal) للإضافة والتعديل                        */}
