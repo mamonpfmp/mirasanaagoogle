@@ -19,8 +19,8 @@ export const useAuth = () => {
     // خارج الـ AuthProvider
   }
 
-  // إذا وجد مستخدم مسجل فعلياً نستخدم بياناته، وإلا نستخدم بيانات المشرف العام الافتراضية
-  const user = contextAuth?.user || {
+  // إذا كان مزود AuthContext متوفراً، نعتمد على مستخدم الجلسة
+  const user = contextAuth !== null ? contextAuth.user : {
     name: 'مأمون علي محسن أنعم',
     email: 'mamonpfmp@gmail.com',
     jobTitle: 'مشرف النظام المالي (AFMIS)',

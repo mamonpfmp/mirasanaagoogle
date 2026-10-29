@@ -182,9 +182,9 @@ const CustomBarTooltip = ({ active, payload, label }) => {
 };
 
 export default function AFMISDashboard() {
-  const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month' | 'quarter'>('week');
+  const [timeframe, setTimeframe] = useState('week');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'completed' | 'pending'>('all');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   // محاكاة تحديث البيانات اللحظية
   const handleRefresh = () => {
